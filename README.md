@@ -1,3 +1,5 @@
+<img src="assets/03.gif"/><br>
+
 # Visualizing
 
 This repository contains my second implementation of a live audio visualizer. The software is able to analyse an audio signal and generate a matching video signal. Through a connected MIDI Interface the user can combine geometrical forms with video loops and filters.
@@ -7,6 +9,10 @@ This repository contains my second implementation of a live audio visualizer. Th
 	* show simple animated geometric forms that respond to beats
 	* load and loop video files and manipulate them with several effects
 	* use shader based filters (pixelate, noise, rgb-shift ) to tune the composition
+
+<img src="assets/01.gif"/><br>
+
+<img src="assets/02.gif"/><br>
 
 <img src="assets/grid.gif"/><br>
 
