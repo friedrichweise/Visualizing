@@ -54,7 +54,7 @@ public class BeatBoxes extends Feature {
 
 	public void drawFeature(int currentTimeState) {
 		int maxGrow = 200;
-		float rectW = bufferSize / beat.detectSize();
+		float rectW = width / beat.detectSize();
 
 		if ( beat.isKick() ) kickSize = maxGrow;
 		if ( beat.isSnare() ) snareSize = maxGrow;
@@ -65,8 +65,8 @@ public class BeatBoxes extends Feature {
 		}
 
 		PShape snareBox = createBox(30, Math.round(kickSize), 100);
-		PShape kickBox = createBox(30, Math.round(kickSize), 100);
-		PShape hatBox = createBox(30, Math.round(kickSize), 100);
+		PShape kickBox = createBox(30, Math.round(snareSize), 100);
+		PShape hatBox = createBox(30, Math.round(hatSize), 100);
 
 		rotate = (rotate + this.midiRotateSpeed) % 360;
 		kickBox.rotateY(rotate);
@@ -76,27 +76,27 @@ public class BeatBoxes extends Feature {
 		snareBox.rotateX(rotate);
 
 		pushMatrix();
-		translate(currentAudioSource.getBufferSize()/2-(midiBeatBoxGab*2), height/2, 100);
+		translate(width/2-(midiBeatBoxGab*2), height/2, 100);
 		shape(hatBox);
 		popMatrix();
 
 		pushMatrix();
-		translate(currentAudioSource.getBufferSize()/2-midiBeatBoxGab, height/2, 100);
+		translate(width/2-midiBeatBoxGab, height/2, 100);
 		shape(snareBox);
 		popMatrix();
 
 		pushMatrix();
-		translate(currentAudioSource.getBufferSize()/2, height/2, 100);
+		translate(width/2, height/2, 100);
 		shape(kickBox);
 		popMatrix();
 		
 		pushMatrix();
-		translate(currentAudioSource.getBufferSize()/2+midiBeatBoxGab, height/2, 100);
+		translate(width/2+midiBeatBoxGab, height/2, 100);
 		shape(snareBox);
 		popMatrix();
 
 		pushMatrix();
-		translate(currentAudioSource.getBufferSize()/2+(midiBeatBoxGab*2), height/2, 100);
+		translate(width/2+(midiBeatBoxGab*2), height/2, 100);
 		shape(hatBox);
 		popMatrix();
 
