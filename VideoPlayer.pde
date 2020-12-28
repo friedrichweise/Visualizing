@@ -8,7 +8,6 @@ import processing.video.*;
 public class VideoPlayer extends Feature {
 	float scale = 1.0;
 	private int midiCurrentOpacity = 0;
-	private float midiVideoSpeed = 1.0;
 
 	ArrayList<String> movies;
 	Movie currentMovie = null;
@@ -19,10 +18,6 @@ public class VideoPlayer extends Feature {
 	PShape mySlice;
 	float radius;
 	float offset = 0;
-
-
-	HashMap<Integer, String> movieMappings;
-
 
 	public VideoPlayer(PApplet applet, MidiInterface midi, int midiEnableFaderNumber) {
 		super(applet, midi, midiEnableFaderNumber);
@@ -57,7 +52,6 @@ public class VideoPlayer extends Feature {
 		midi.registerForFaderValue(this, 46);
 		midi.registerForNoteValue(this, 13);
 		
-		midi.registerForVideoNoteValues(this);
 	}
 
 	public void featureGotEnabled() {
@@ -76,10 +70,7 @@ public class VideoPlayer extends Feature {
 			angle = PI/slices;
 		}
 		if (number == 46) {
-			midiVideoSpeed = map(value, 0, 127, 0, 2);
-			if (currentMovie != null) {
-				//currentMovie.speed(midiVideoSpeed);
-			}
+			//@todo
 		}
 	}
 
@@ -88,7 +79,6 @@ public class VideoPlayer extends Feature {
 			if (currentMovie.available()) {
 				currentMovie.read();
 			}
-
 			if (slices <= 1) {
 				this.renderVideo();
 			} else {
@@ -98,18 +88,13 @@ public class VideoPlayer extends Feature {
 	}
 
 	private void renderVideo() {
-		float scale = 1.0;
-		int x = Math.round((bufferSize/2) - (width * scale * 0.5));
-		//tint(midiCurrentOpacity, midiCurrentOpacity);
 		tint(midi.hue, midi.saturation, midiCurrentOpacity);
-		image(currentMovie, x, 0, (width * scale), (height * scale));
+		int y = (height - currentMovie.height)/2;
+		image(currentMovie, 0, y, currentMovie.width, currentMovie.height);
+		// the following code stretches the video to fit the screen:
+		// image(currentMovie, 0, 0, width, height);
 	}
 
-	  // from Key25
-    public void newVideoMappingNoteValue(int note) {
-        //String fileName = movieMappings.get(note);
-       // this.initNewVideo(fileName);
-    }
 
 	private void renderCaleidoscope() {
 		offset+=PI/180;	
@@ -124,7 +109,7 @@ public class VideoPlayer extends Feature {
 			mySlice.vertex(cos(-angle)*radius, sin(-angle)*radius, cos(-angle+offset)*radius+currentMovie.width/2, sin(-angle+offset)*radius+currentMovie.height/2);
 		mySlice.endShape();
 		pushMatrix();
-		translate(bufferSize/2, height/2);
+		translate(width/2, height/2);
 		for (int i = 0; i < slices; i++) {
 			rotate(angle*2);
 			shape(mySlice);
