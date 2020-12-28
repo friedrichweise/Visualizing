@@ -9,7 +9,7 @@ public class VideoPlayer extends Feature {
 	float scale = 1.0;
 	private int midiCurrentOpacity = 0;
 	private float midiVideoSpeed = 1.0;
-	private Capture cam;
+
 	ArrayList<String> movies;
 	Movie currentMovie = null;
 
@@ -20,13 +20,12 @@ public class VideoPlayer extends Feature {
 	float radius;
 	float offset = 0;
 
-	private PApplet applet;
+
 	HashMap<Integer, String> movieMappings;
 
 
 	public VideoPlayer(PApplet applet, MidiInterface midi, int midiEnableFaderNumber) {
 		super(applet, midi, midiEnableFaderNumber);
-		this.applet = applet;
 	}
 
 	public void setupFeature() {
@@ -35,24 +34,6 @@ public class VideoPlayer extends Feature {
 		// simple movie list for MidiMix
 		ArrayList<String> movies;
 		this.movies = new ArrayList<String>();
-
-
-		String[] cameras = Capture.list();
-  
-  if (cameras.length == 0) {
-    println("There are no cameras available for capture.");
-    exit();
-  } else {
-    println("Available cameras:");
-    for (int i = 0; i < cameras.length; i++) {
-      println(cameras[i]);
-    }
-    
-    // The camera can be initialized directly using an 
-    // element from the array returned by list():
-    cam = new Capture(this.applet, cameras[0]);
-    cam.start();     
-  }      
 
 		println("Initalizing Video Files:");
 		File dir = new File(dataPath(""));
@@ -75,7 +56,9 @@ public class VideoPlayer extends Feature {
 		midi.registerForFaderValue(this, 47);
 		midi.registerForFaderValue(this, 46);
 		midi.registerForNoteValue(this, 13);
-			}
+		
+		midi.registerForVideoNoteValues(this);
+	}
 
 	public void featureGotEnabled() {
 
@@ -101,10 +84,6 @@ public class VideoPlayer extends Feature {
 	}
 
 	public void drawFeature(int currentTimeState) {
-		if (cam.available() == true) {
-   			 cam.read();
-  		}
-  		set(0, 0, cam);
 		if (currentMovie != null) {
 			if (currentMovie.available()) {
 				currentMovie.read();
@@ -119,10 +98,11 @@ public class VideoPlayer extends Feature {
 	}
 
 	private void renderVideo() {
-		int x = Math.round((bufferSize/2) - (width * 0.5));
-		tint(midiCurrentOpacity, midiCurrentOpacity);
-		//tint(midi.hue, midi.saturation, midiCurrentOpacity);
-		image(currentMovie, x, 0, width, height);
+		float scale = 1.0;
+		int x = Math.round((bufferSize/2) - (width * scale * 0.5));
+		//tint(midiCurrentOpacity, midiCurrentOpacity);
+		tint(midi.hue, midi.saturation, midiCurrentOpacity);
+		image(currentMovie, x, 0, (width * scale), (height * scale));
 	}
 
 	  // from Key25
@@ -136,13 +116,12 @@ public class VideoPlayer extends Feature {
 
 		mySlice = createShape();
 		mySlice.beginShape();
-			mySlice.tint(midiCurrentOpacity, midiCurrentOpacity);
+			mySlice.tint(midi.hue, midi.saturation, midiCurrentOpacity);
 			mySlice.texture(currentMovie);
 			mySlice.noStroke();
 			mySlice.vertex(0, 0, currentMovie.width/2, currentMovie.height/2);
 			mySlice.vertex(cos(angle)*radius, sin(angle)*radius, cos(angle+offset)*radius+currentMovie.width/2, sin(angle+offset)*radius+currentMovie.height/2);
 			mySlice.vertex(cos(-angle)*radius, sin(-angle)*radius, cos(-angle+offset)*radius+currentMovie.width/2, sin(-angle+offset)*radius+currentMovie.height/2);
-		mySlice.scale(1.5);
 		mySlice.endShape();
 		pushMatrix();
 		translate(bufferSize/2, height/2);

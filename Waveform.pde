@@ -8,7 +8,6 @@ public class Waveform extends Feature {
 	private int valueMax = height / 2;
 	private int midiLineSpacing = 100;
 	private float midiLineWidth = 7.0;
-	private int distanceBetweenWaveforms = 200;
 
 	PShape line;  // The PShape object
 
@@ -20,7 +19,6 @@ public class Waveform extends Feature {
 		midi.registerForFaderValue(this, 1);
 		midi.registerForFaderValue(this, 18);
 		midi.registerForFaderValue(this, 17);
-		midi.registerForFaderValue(this, 19);
 		midi.registerForFaderValue(this, 16);
 		midi.registerForNoteValue(this, 1);
 	}
@@ -30,13 +28,10 @@ public class Waveform extends Feature {
 			midiLineSpacing = Math.round(map(value, 127, 0, 15, 400));
 		}
 		if (number == 17) {
-			midiLineWidth = map(value, 0, 127, 1, 20);
+			midiLineWidth = map(value, 0, 127, 0, 20);
 		}
 		if (number == 16) {
 			valueMax = Math.round(map(value, 0, 127,  0,  height));
-		}
-		if (number == 19) {
-			distanceBetweenWaveforms = Math.round(map(value, 0, 127, 400, 0));
 		}
 	}
 	public void newNoteValue(int note) {
@@ -61,15 +56,16 @@ public class Waveform extends Feature {
 	public void drawFeature(int currentTimeState) {
   		int yPosition = height / 2;
 
-		currentAudioSource.reframe();
-		drawScene(currentTimeState, yPosition - distanceBetweenWaveforms);
-		drawScene(currentTimeState, yPosition + distanceBetweenWaveforms);
+		drawScene(currentTimeState, yPosition - midi.distanceBetweenWaveforms);
+		drawScene(currentTimeState, yPosition + midi.distanceBetweenWaveforms);
 	}
 
 	public void drawScene(int run, int yPosition) {
+		currentAudioSource.reframe();
+		int centerX = currentAudioSource.getBufferSize()/2;
 		int centerY = height/2;
-		int y = yPosition - (valueMax / 2);
 
+		int y = yPosition - (valueMax / 2);
 		line = createShape();
 		line.beginShape();
 		line.noFill();
@@ -78,14 +74,13 @@ public class Waveform extends Feature {
 			line.vertex(i+1, getValueFromAudioBuffer(i+1));
 		}
 		line.endShape();
-		
 		for (int z = 400; z > 0; z=z-midiLineSpacing) {
 			int realZ = z;
 
 			if (midiEnableLineMovement == true) {
 				realZ = (z+(run)) % 400;
 			}
-			float strokeWidth = map(realZ, 0, 400, 1, this.midiLineWidth);
+			float strokeWidth = map(realZ, 0, 400, 0, this.midiLineWidth);
 			pushMatrix();
 			line.setStrokeWeight(strokeWidth);
 			line.setStroke(color(midi.hue, midi.saturation, 100));

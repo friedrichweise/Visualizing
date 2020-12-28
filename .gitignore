@@ -2,7 +2,5 @@ output
 *.mp4
 *.mkv
 *.mov
+*.gif
 build-tmp/
-data/*
-meta/*
-.git_disabled/*

@@ -27,7 +27,7 @@ public class BeatVertex extends Feature {
 
 	public void newFaderValue(int value, int number) {
 		if (number == 27) {
-      		midiBeatVertexScaling = map(value, 0, 127, 0.0, 5.0);
+      		midiBeatVertexScaling = map(value, 0, 127, 0.0, 2.0);
 		}
 		if (number == 25) {
 			midiLineWidth = map(value, 0, 127, 0, 20);
@@ -87,7 +87,7 @@ public class BeatVertex extends Feature {
 		}
 		beatVertex.rotateY(vertexRotation);
 		pushMatrix();
-		translate(0, 0, 100);
+		translate(0, 0, 200);
 		shape(beatVertex, centerX, centerY, Math.round(hatSizeVertex * midiBeatVertexScaling), Math.round(400*midiBeatVertexScaling));
 		popMatrix();
 		hatSizeVertex = constrain(hatSizeVertex * 0.98, 100, 400);

@@ -7,7 +7,7 @@ public class Spectro extends Feature {
 	private int midiLineSpacing = 0;
 	private boolean midiVertexEnabled = false;
 	private int midiHistorySize = 40;
-	private int valueMax = 150;
+	private int valueMax = height / 2;
 	LinkedList<ArrayList<Float>> fftHistory = new LinkedList<ArrayList<Float>>();
 
 	public Spectro(PApplet applet, MidiInterface midi, int midiEnableFaderNumber) {
@@ -26,7 +26,7 @@ public class Spectro extends Feature {
 
 	public void newFaderValue(int value, int number) {
 		if (number == 21) {
-			this.midiLineWidth = map(value, 0, 127, 1, 3);
+			this.midiLineWidth = map(value, 0, 127, 0, 10);
 		}
 		if (number == 23) {
 			this.midiLineSpacing = Math.round(map(value, 0, 127, -700, 200));
@@ -35,7 +35,7 @@ public class Spectro extends Feature {
 			this.midiHistorySize = Math.round(map(value, 0, 127, 2, 50));
 		}
 		if (number == 20) {
-			this.valueMax = Math.round(map(value, 0, 127, 0, 500));
+			this.valueMax = Math.round(map(value, 0, 127, 100, height));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class Spectro extends Feature {
 
  		ArrayList<Float> newLine = new ArrayList<Float>();
 		for (int i=0; i < fftMain.avgSize(); i++) {
-			float y = map(fftMain.getAvg(i), 0, 100, valueMax, 0) ;
+			float y = map(fftMain.getAvg(i), 0, 100, 100, 0) ;
 			// smoothing
 			if (i != 0) {
 				y = (y + newLine.get(i-1))/2;

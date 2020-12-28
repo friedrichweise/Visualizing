@@ -30,7 +30,7 @@ public class BeatBoxes extends Feature {
       		midiBeatBoxGab = Math.round(map(value, 0, 127, 900, 0));
 		}
 		if (number == 29) {
-			midiLineWidth = map(value, 0, 127, 1, 10);
+			midiLineWidth = map(value, 0, 127, 0, 20);
 		}
 		if (number == 31) {
 			midiBoxScaling = map(value, 0, 127, 0.0, 2.0);
@@ -64,9 +64,9 @@ public class BeatBoxes extends Feature {
 			noFill();
 		}
 
-		PShape snareBox = createBox(30, Math.round(snareSize), 100);
+		PShape snareBox = createBox(30, Math.round(kickSize), 100);
 		PShape kickBox = createBox(30, Math.round(kickSize), 100);
-		PShape hatBox = createBox(30, Math.round(hatSize), 100);
+		PShape hatBox = createBox(30, Math.round(kickSize), 100);
 
 		rotate = (rotate + this.midiRotateSpeed) % 360;
 		kickBox.rotateY(rotate);

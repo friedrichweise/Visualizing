@@ -17,9 +17,9 @@ ArrayList<Feature> features = new ArrayList<Feature>();
 
 void setup() {
   // base setup
-  //size(displayWidth, displayHeight, P3D);
+  size(displayWidth, displayHeight, P3D);
   //size(1280,720, P3D);
-  fullScreen(P3D, 0);
+  //fullScreen(P3D, 0);
   surface.setResizable(false);
   frameRate(30);
   colorMode(HSB);
@@ -49,8 +49,8 @@ void setup() {
   features.add(vidFX);
 
   Waveform wave = new Waveform(this, midiInterface, 3);
-  midiInterface.setControlLED(3, true);
   wave.enabled = true;
+  midiInterface.setControlLED(3, true);
   features.add(wave);
 
   Spectro spectro = new Spectro(this, midiInterface, 6);
@@ -77,7 +77,6 @@ void draw() {
   }
   if (frameRate < 25) {
     midiInterface.setControlLED(22, true);
-    println("frameRate: "+frameRate);
   } else {
     midiInterface.setControlLED(22, false);
   }

@@ -15,16 +15,35 @@ public static class MidiInterface {
 
 	public int hue = 0;
 	public int saturation = 0;
+	public int distanceBetweenWaveforms = 200;
+
+	// video specific stuff
+	public VideoPlayer videoPlayer;
 
 	public static MidiInterface getInstance() {
 		return INSTANCE;
 	}
 
 	private MidiInterface() {
+		println("Initializing MidiInterface with following devices: ");
+		MidiBus.list();
+
+		MidiBusController key25Controller = new MidiBusController();
+
 		myBus = new MidiBus(this, 0, 1);
 		//disable all leds 
 		for (int i = 0; i < 100; ++i) {
 			this.setControlLED(i, false);
+		}
+	}
+
+	public void registerForVideoNoteValues(VideoPlayer videoPlayer) {
+		this.videoPlayer = videoPlayer;
+	}
+
+	public class MidiBusController {
+		void noteOff(int channel, int pitch, int velocity) {
+			videoPlayer.newVideoMappingNoteValue(pitch);
 		}
 	}
 
@@ -52,6 +71,9 @@ public static class MidiInterface {
 			case 60:
 				hue = Math.round(map(value, 0, 127, 0, 360));
 			break;
+			case 19:
+				distanceBetweenWaveforms = Math.round(map(value, 0, 127, 400, 0));
+			break;	
   		}
 	}
 
