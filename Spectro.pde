@@ -102,7 +102,7 @@ public class Spectro extends Feature {
 			noFill();
 			for(int i = 0; i < lineToDraw.size(); i++) {
 				float value = lineToDraw.get(i);
-				float x = map(i, 0, fftMain.avgSize(), 0, currentAudioSource.getBufferSize());
+				float x = map(i, 0, fftMain.avgSize(), 0, width);
 				vertex(x, value, z);
 				if (midiVertexEnabled && currentLine != 0) {
 					float prevValue = fftHistory.get(currentLine-1).get(i);

@@ -76,7 +76,7 @@ public class BeatVertex extends Feature {
 
 		if (beat.isKick() ) hatSizeVertex = 400;
 
-		int centerX = currentAudioSource.getBufferSize()/2;
+		int centerX = width/2;
 		int centerY = height/2;
 		beatVertex.setStrokeWeight(this.midiLineWidth);
 		if (midiFillEnabled) {

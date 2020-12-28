@@ -59,21 +59,21 @@ public class CameraController extends Feature {
 		if (midiMovingCameraMode == true) {
 			int cameraYPost = Math.round((sin((float)currentTimeState*0.05)*230)+ (height/2));
 			int cameraXPost = Math.round((cos((float)currentTimeState*0.05)*200)+800);
-			camera(cameraXPost, cameraYPost, eyeZ, bufferSize/2, height/2, 0, 0, 1, 0);
+			camera(cameraXPost, cameraYPost, eyeZ, width/2, height/2, 0, 0, 1, 0);
 		}
 		else if (midiFixedCameraMode == true) {
 			// fixed center camera mode
 			// eye, center
-			camera(bufferSize/2, height/2, eyeZ, bufferSize/2, height/2, 0, 0, 1, 0);
+			camera(width/2, height/2, eyeZ, width/2, height/2, 0, 0, 1, 0);
 		} else {
 			// Midi Based Camera
-			camera(midiXCameraPosition, midiYCameraPosition, eyeZ, bufferSize/2, height/2, 0, 0, 1, 0);    
+			camera(midiXCameraPosition, midiYCameraPosition, eyeZ, width/2, height/2, 0, 0, 1, 0);    
 		}
 
 		// Mouse Camera Mode
-		//int mouseXPosition = Math.round(map(mouseX, 0, displayWidth, (bufferSize/2)-cameraSpan, (bufferSize/2)+cameraSpan));
+		//int mouseXPosition = Math.round(map(mouseX, 0, displayWidth, (width/2)-cameraSpan, (width/2)+cameraSpan));
 		//int mouseYPosition = Math.round(map(mouseY, 0, displayHeight, (height/2)-cameraSpan, (height/2)+cameraSpan));
-		//camera(mouseXPosition, mouseYPosition, (displayHeight/2) / tan(PI/6), bufferSize/2, displayHeight/2, 0, 0, 1, 0);
+		//camera(mouseXPosition, mouseYPosition, (displayHeight/2) / tan(PI/6), width/2, displayHeight/2, 0, 0, 1, 0);
 	}
 
 }
