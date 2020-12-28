@@ -8,8 +8,7 @@ BeatDetect beat;
 FFT fftMain;
 AudioSource currentAudioSource = new AudioSource();
 
-/* buffer Size for AudioInput -> defines x span of waves */
-int bufferSize = 2048;
+int bufferSize = 1024;
 float sampleRate = 44100.0f;
 final MidiInterface midiInterface = MidiInterface.getInstance();;
 
@@ -17,15 +16,13 @@ ArrayList<Feature> features = new ArrayList<Feature>();
 
 void setup() {
   // base setup
-  size(displayWidth, displayHeight, P3D);
-  //size(1280,720, P3D);
+  //size(displayWidth, displayHeight, P3D);
+  size(1280, 1024, P3D);
   //fullScreen(P3D, 0);
   surface.setResizable(false);
   frameRate(30);
-  colorMode(HSB);
   colorMode(HSB, 360, 100, 100, 100); 
-
-  // audio input //
+  // audio input 
   minim = new Minim(this);
   AudioInput input;
   input = minim.getLineIn(Minim.STEREO, bufferSize);
@@ -39,7 +36,7 @@ void setup() {
   beat.setSensitivity(300);
 
   CameraController camera = new CameraController(this, midiInterface, -1);
-  camera.enabled = true;
+  camera.enableFeature();
   features.add(camera);
 
   VideoPlayer videoPlayer = new VideoPlayer(this, midiInterface, 15);
@@ -49,7 +46,7 @@ void setup() {
   features.add(vidFX);
 
   Waveform wave = new Waveform(this, midiInterface, 3);
-  wave.enabled = true;
+  wave.enableFeature();
   midiInterface.setControlLED(3, true);
   features.add(wave);
 
@@ -87,7 +84,7 @@ void draw() {
   fftMain.forward(currentAudioSource.getBufferForCenter());
   // draw features
   for (Feature feature : features) {
-    if (feature.enabled) {
+    if (feature.isEnabled()) {
       pushStyle();
       feature.drawFeature(currentRun);
       popStyle();
@@ -98,7 +95,7 @@ void draw() {
 void keyPressed() {
   if (key == CODED) {
     for (Feature feature : features) {
-      if (feature.enabled) {
+      if (feature.isEnabled()) {
         feature.keyPressed(keyCode);
       }
     }
