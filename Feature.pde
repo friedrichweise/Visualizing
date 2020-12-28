@@ -5,10 +5,10 @@
 
 public abstract class Feature {
 	private String name;
-  	public PApplet applet;
-  	public MidiInterface midi;
-  	public boolean enabled = false;
-    public int midiEnableFaderNumber;
+  public PApplet applet;
+  public MidiInterface midi;
+  private boolean enabled = false;
+  public int midiEnableFaderNumber;
 
 	public Feature(PApplet applet, MidiInterface midi, int midiEnableFaderNumber) {
     	this.applet = applet;
@@ -20,6 +20,20 @@ public abstract class Feature {
 		  println("Initializing Feature: ", this.getClass().getSimpleName());
       this.setupFeature();
 	}
+
+  public void enableFeature() {
+    this.enabled = true;
+    println("Enabled Feature:    ", this.getClass().getSimpleName());
+    this.featureGotEnabled();
+  }
+  public void disableFeature() {
+    this.enabled = false;
+    println("Disabled Feature:   ", this.getClass().getSimpleName());
+    //this.featureGotDisabled();
+  }
+  public boolean isEnabled() {
+    return this.enabled;
+  }
 
 	public abstract void setupFeature();
   
@@ -33,21 +47,15 @@ public abstract class Feature {
     return;
   }
 
-  public void featureGotDisabled() {
-    
-  }
-
   public void newNoteValue(int note) {  
     if (note == this.midiEnableFaderNumber) {
-        this.enabled = !this.enabled;
-        this.midi.setControlLED(note, this.enabled);
-        if (this.enabled) {
-          this.featureGotEnabled();
-          println("Enabled Feature:    ", this.getClass().getSimpleName());
-        } else {
-          this.featureGotDisabled();
-          println("Disabled Feature:   ", this.getClass().getSimpleName());
-        }
+      if (this.enabled) {
+        this.disableFeature();
+        this.midi.setControlLED(note, false);
+      } else {
+        this.enableFeature();
+        this.midi.setControlLED(note, true);
       }
+    }
   }
 }
